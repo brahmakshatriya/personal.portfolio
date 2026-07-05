@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dhruv's Portfolio WebApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Barlow:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --gray: rgba(255,255,255,0.55);
+      --dim: rgba(255,255,255,0.15);
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.1);
+      --glass-hover: rgba(255,255,255,0.08);
+      --dot: rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CUSTOM CURSOR ─── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+    }
+    .cursor-ring {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform 0.15s ease, width 0.3s, height 0.3s;
+    }
+
+    /* ─── DOT MATRIX BG ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
+      background-size: 28px 28px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── VIGNETTE ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, #000 100%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 52px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.15em;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    .nav-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 6px 14px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .blink-dot {
+      width: 5px; height: 5px;
+      background: #fff;
+      border-radius: 50%;
+      animation: blink 1.6s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
+
+    /* ─── SECTIONS ─── */
+    section { position: relative; z-index: 1; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 52px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-mono {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeUp 0.7s ease both;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-mono::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--gray);
+      display: block;
+    }
+
+    .hero-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 14vw, 13rem);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      color: #fff;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-name .stroke {
+      -webkit-text-stroke: 1.5px rgba(255,255,255,0.5);
+      color: transparent;
+      display: block;
+    }
+
+    .hero-sub {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 24px;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-role-text {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      font-size: clamp(1rem, 2.5vw, 1.6rem);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--glass-border);
+    }
+
+    .hero-location {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 60px;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .hero-cta { display: flex; gap: 14px; }
+
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      cursor: none;
+      transition: all 0.25s;
+      border: none;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: #000;
+      font-weight: 700;
+    }
+    .btn-white:hover { background: rgba(255,255,255,0.88); transform: scale(0.97); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray);
+      border: 1px solid var(--glass-border);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+    .hero-scroll-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    /* ─── STATS BAR ─── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      margin-top: 56px;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .stat {
+      padding: 28px 32px;
+      border-right: 1px solid var(--glass-border);
+      transition: background 0.2s;
+    }
+    .stat:last-child { border-right: none; }
+    .stat:hover { background: var(--glass-hover); }
+
+    .stat-n {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.2rem;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      color: #fff;
+    }
+
+    .stat-l {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-top: 6px;
+    }
+
+    /* ─── SECTION WRAPPER ─── */
+    .s-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 52px;
+    }
+
+    .s-head {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .s-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .s-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      letter-spacing: 0.08em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .s-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--glass-border), transparent);
+    }
+
+    /* ─── GLASS CARD ─── */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    }
+    .glass:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    /* ─── ABOUT ─── */
+    #about { border-top: 1px solid var(--glass-border); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+
+    .about-text-card {
+      padding: 40px;
+    }
+
+    .about-text-card p {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 18px;
+    }
+
+    .about-text-card p strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .info-card { padding: 36px; }
+
+    .info-card-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 28px;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      align-items: flex-start;
+    }
+    .info-row:last-child { border-bottom: none; }
+
+    .info-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      min-width: 76px;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .info-val {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #fff;
+      word-break: break-all;
+    }
+    .info-val a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .info-val a:hover { border-color: #fff; }
+
+    .open-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 3px 10px 3px 7px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+
+    /* ─── SKILLS ─── */
+    #skills { border-top: 1px solid var(--glass-border); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .skill-card {
+      padding: 30px 24px;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    .skill-card:hover { transform: translateY(-6px); }
+
+    .skill-glyph {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .skill-name {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .skill-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 8px;
+    }
+
+    .skill-pct {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+    }
+
+    .skill-bar-wrap {
+      margin-top: 20px;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .skill-bar {
+      height: 100%;
+      background: #fff;
+      animation: growBar 1.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes growBar { from { width: 0 !important; } }
+
+    /* ─── EXPERIENCE ─── */
+    #experience { border-top: 1px solid var(--glass-border); }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .exp-card {
+      padding: 32px;
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px;
+      align-items: start;
+      cursor: none;
+    }
+
+    .exp-card:hover { transform: scale(1.01); }
+
+    .exp-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .exp-company {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 900;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .exp-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-top: 4px;
+    }
+
+    .exp-desc {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      margin-top: 10px;
+      grid-column: 1 / -1;
+    }
+
+    /* ─── CONTACT ─── */
+    #contact { border-top: 1px solid var(--glass-border); }
+
+    .contact-hero-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: #fff;
+      margin-bottom: 56px;
+    }
+
+    .contact-hero-text .ghost {
+      -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+      color: transparent;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 16px;
+    }
+
+    .contact-card {
+      padding: 32px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      cursor: none;
+    }
+
+    .contact-card:hover { transform: translateY(-4px); }
+
+    .contact-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .contact-card-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .contact-card-val {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .contact-card-arrow {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.2);
+      align-self: flex-end;
+      margin-left: auto;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .contact-card:hover .contact-card-arrow {
+      transform: translate(4px,-4px);
+      color: #fff;
+    }
+
+    /* ─── CERTIFICATIONS ─── */
+    #certifications { border-top: 1px solid var(--glass-border); }
+
+    .cert-subtitle {
+      max-width: 640px;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+      margin-top: -32px;
+      margin-bottom: 44px;
+    }
+
+    .cert-count-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 44px;
+    }
+
+    .cert-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 14px 30px;
+    }
+
+    .cert-count-emoji { font-size: 1.3rem; line-height: 1; }
+
+    .cert-count-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .cert-count-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Featured cert */
+    .cert-featured {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      overflow: hidden;
+      border-radius: 24px;
+      margin-bottom: 40px;
+      cursor: none;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .cert-featured-badge {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      z-index: 2;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 8px 16px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cert-featured-media {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      min-height: 280px;
+    }
+
+    .cert-featured-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .cert-featured:hover .cert-featured-media img { transform: scale(1.06); }
+
+    .cert-featured-body {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .cert-featured-org {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .cert-featured-name {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 900;
+      font-size: 1.9rem;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .cert-featured-tags {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+    }
+
+    /* Grid of cards */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .cert-card {
+      position: relative;
+      padding: 20px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: none;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -60%;
+      width: 40%; height: 100%;
+      background: linear-gradient(115deg, transparent, rgba(255,255,255,0.08), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.7s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .cert-card:hover::before { left: 130%; }
+
+    .cert-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    }
+
+    .cert-img-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      aspect-ratio: 4/3;
+      margin-bottom: 20px;
+    }
+
+    .cert-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .cert-card:hover .cert-img-wrap img { transform: scale(1.08); }
+
+    .cert-name {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .cert-org {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-top: 6px;
+    }
+
+    .cert-desc {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    .cert-view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 10px 18px;
+      cursor: none;
+      transition: all 0.2s;
+    }
+
+    .cert-view-btn:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .lightbox.open { opacity: 1; pointer-events: auto; }
+
+    .lightbox-figure {
+      position: relative;
+      max-width: min(920px, 88vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      transform: scale(0.94);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .lightbox.open .lightbox-figure { transform: scale(1); }
+
+    .lightbox-img-wrap {
+      max-width: 100%;
+      max-height: 70vh;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .lightbox-img-wrap img {
+      max-width: 100%;
+      max-height: 70vh;
+      display: block;
+      object-fit: contain;
+      cursor: none;
+      transition: transform 0.3s ease;
+      transform-origin: center;
+    }
+
+    .lightbox-img-wrap img.zoomed { transform: scale(1.8); cursor: none; }
+
+    .lightbox-caption {
+      text-align: center;
+    }
+
+    .lightbox-caption-name {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+
+    .lightbox-caption-org {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 6px;
+    }
+
+    .lightbox-close, .lightbox-arrow {
+      position: fixed;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+      transition: background 0.2s, border-color 0.2s;
+      z-index: 501;
+    }
+
+    .lightbox-close:hover, .lightbox-arrow:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .lightbox-close {
+      top: 28px; right: 28px;
+      width: 44px; height: 44px;
+      font-size: 1.1rem;
+    }
+
+    .lightbox-arrow {
+      top: 50%;
+      width: 48px; height: 48px;
+      font-size: 1.2rem;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-prev { left: 28px; }
+    .lightbox-next { right: 28px; }
+
+    .lightbox-counter {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 28px 52px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-l {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .footer-r {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(30px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px) {
+      nav { padding: 16px 24px; }
+      .nav-links, .nav-tag { display: none; }
+      #hero { padding: 100px 24px 60px; }
+      .s-wrap { padding: 60px 24px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .exp-grid { grid-template-columns: 1fr; }
+      .contact-row { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(2) { border-right: none; }
+      .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--glass-border); }
+      footer { flex-direction: column; gap: 8px; }
+      .cert-subtitle { margin-top: -20px; }
+      .cert-featured { grid-template-columns: 1fr; }
+      .cert-featured-body { padding: 32px; }
+      .certs-grid { grid-template-columns: 1fr 1fr; }
+      .lightbox-arrow { width: 40px; height: 40px; font-size: 1rem; }
+      .lightbox-prev { left: 12px; }
+      .lightbox-next { right: 12px; }
+      .lightbox-close { top: 16px; right: 16px; }
+    }
+
+    @media(max-width:600px) {
+      .certs-grid { grid-template-columns: 1fr; }
+      .cert-featured-name { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">DHRUV.</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-tag">
+      <div class="blink-dot"></div>
+      Open to Internships
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div style="max-width:1200px;margin:0 auto;width:100%">
+      <div class="hero-mono">Mumbai, India — AI Web Developer</div>
+
+      <div class="hero-name">
+        DHRUV
+        <span class="stroke">CHAUHAN</span>
+      </div>
+
+      <div class="hero-sub">
+        <span class="hero-role-text">AI Web Developer</span>
+        <div class="hero-divider"></div>
+        <span class="hero-location">CLASS XII · MUMBAI · 2025</span>
+      </div>
+
+      <div class="hero-bottom">
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn-white">Get in Touch ↗</a>
+          <a href="#skills" class="btn btn-ghost">View Skills</a>
+        </div>
+        <div class="hero-scroll-hint">Scroll to Explore</div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-n">06</div>
+          <div class="stat-l">Industry Simulations</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">09</div>
+          <div class="stat-l">Core Skills</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">XII</div>
+          <div class="stat-l">Class, Mumbai</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">∞</div>
+          <div class="stat-l">Learning Mindset</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="s-wrap">
+      <div class="s-head reveal">
+        <span class="s-num">01</span>
+        <h2 class="s-title">ABOUT</h2>
+        <div class="s-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="glass about-text-card reveal">
+          <p>I'm a <strong>Class 12 student based in Mumbai</strong> with a strong interest in software engineering and emerging technologies like <strong>Generative AI</strong>.</p>
+          <p>I have completed industry job simulations from <strong>JPMorgan Chase, BCG X, Tata Group, Electronic Arts, Lloyds Banking Group,</strong> and <strong>Citi</strong> — gaining practical exposure to real-world problem-solving, software development, and data analysis.</p>
+          <p>I enjoy working with AI tools, exploring coding concepts, and continuously learning new technologies. Always curious about how things work — and how they can be improved.</p>
+          <p>Currently <strong>seeking internship opportunities</strong> to apply my skills, gain hands-on experience, and grow in a professional environment.</p>
+        </div>
+        <div class="glass info-card reveal">
+          <div class="info-card-title">Quick Info</div>
+          <div class="info-row">
+            <span class="info-label">Full Name</span>
+            <span class="info-val">Dhruv Dayaram Chauhan</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Role</span>
+            <span class="info-val">AI Web Developer</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Location</span>
+            <span class="info-val">Mumbai, India 🇮🇳</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Education</span>
+            <span class="info-val">Class 12 Student</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Status</span>
+            <span class="info-val">
+              <span class="open-badge"><span class="blink-dot"></span> Open to Work</span>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-val"><a href="mailto:ittzzzdhruv@gmail.com">ittzzzdhruv@gmail.com</a></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Phone</span>
+            <span class="info-val"><a href="tel:9594105790">+91 9594105790</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="s-wrap">
+      <div class="s-head reveal">
+        <span class="s-num">02</span>
+        <h2 class="s-title">SKILLS</h2>
+        <div class="s-line"></div>
+      </div>
+      <div class="skills-grid">
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">🐍</span>
+          <div class="skill-name">Python Programming</div>
+          <div class="skill-sub">Language</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div>
+          <div class="skill-pct">85</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">⚡</span>
+          <div class="skill-name">Agentic AI Coding</div>
+          <div class="skill-sub">Development</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:80%"></div></div>
+          <div class="skill-pct">80</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">📊</span>
+          <div class="skill-name">Data Analysis</div>
+          <div class="skill-sub">Analytics</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:75%"></div></div>
+          <div class="skill-pct">75</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">⚖️</span>
+          <div class="skill-name">Ethical Reasoning</div>
+          <div class="skill-sub">Critical Thinking</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div>
+          <div class="skill-pct">90</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">🤖</span>
+          <div class="skill-name">AI Strategy</div>
+          <div class="skill-sub">Generative AI</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:88%"></div></div>
+          <div class="skill-pct">88</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">🎨</span>
+          <div class="skill-name">UX Design</div>
+          <div class="skill-sub">Design</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:78%"></div></div>
+          <div class="skill-pct">78</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">💹</span>
+          <div class="skill-name">Financial Modeling</div>
+          <div class="skill-sub">Finance</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:72%"></div></div>
+          <div class="skill-pct">72</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">🔐</span>
+          <div class="skill-name">Cybersecurity</div>
+          <div class="skill-sub">Security</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:70%"></div></div>
+          <div class="skill-pct">70</div>
+        </div>
+        <div class="glass skill-card reveal">
+          <span class="skill-glyph">🧭</span>
+          <div class="skill-name">Product Management</div>
+          <div class="skill-sub">Strategy</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:76%"></div></div>
+          <div class="skill-pct">76</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="s-wrap">
+      <div class="s-head reveal">
+        <span class="s-num">03</span>
+        <h2 class="s-title">EXPERIENCE</h2>
+        <div class="s-line"></div>
+      </div>
+      <div class="exp-grid">
+        <div class="glass exp-card reveal">
+          <div class="exp-icon">🏦</div>
+          <div>
+            <div class="exp-company">JPMorgan Chase</div>
+            <div class="exp-type">Industry Job Simulation</div>
+          </div>
+          <div class="exp-desc">Gained practical exposure to software development concepts and real-world financial tech problem-solving frameworks.</div>
+        </div>
+        <div class="glass exp-card reveal">
+          <div class="exp-icon">💼</div>
+          <div>
+            <div class="exp-company">BCG X</div>
+            <div class="exp-type">Industry Job Simulation</div>
+          </div>
+          <div class="exp-desc">Explored data analysis and strategic consulting at one of the world's leading innovation and technology labs.</div>
+        </div>
+        <div class="glass exp-card reveal">
+          <div class="exp-icon">🏢</div>
+          <div>
+            <div class="exp-company">Tata Group</div>
+            <div class="exp-type">Industry Job Simulation</div>
+          </div>
+          <div class="exp-desc">Applied problem-solving and analytical skills within the context of a large, diversified global conglomerate.</div>
+        </div>
+        <div class="glass exp-card reveal">
+          <div class="exp-icon">🎮</div>
+          <div>
+            <div class="exp-company">Electronic Arts</div>
+            <div class="exp-type">Industry Job Simulation</div>
+          </div>
+          <div class="exp-desc">Explored software engineering and product development workflows within a leading global game technology company.</div>
+        </div>
+        <div class="glass exp-card reveal">
+          <div class="exp-icon">🏛️</div>
+          <div>
+            <div class="exp-company">Lloyds Banking Group</div>
+            <div class="exp-type">Industry Job Simulation</div>
+          </div>
+          <div class="exp-desc">Practiced advanced UX design for accessible, user-centered financial products at scale.</div>
+        </div>
+        <div class="glass exp-card reveal">
+          <div class="exp-icon">🏧</div>
+          <div>
+            <div class="exp-company">Citi</div>
+            <div class="exp-type">Industry Job Simulation</div>
+          </div>
+          <div class="exp-desc">Explored core banking services and customer-facing financial workflows at a global bank.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="s-wrap">
+      <div class="s-head reveal">
+        <span class="s-num">04</span>
+        <h2 class="s-title">CERTIFICATIONS</h2>
+        <div class="s-line"></div>
+      </div>
+      <p class="cert-subtitle reveal">Industry-recognized virtual experiences, certifications and professional programs completed across software engineering, AI, cybersecurity, finance and product development.</p>
+
+      <div class="cert-count-wrap reveal">
+        <div class="cert-count">
+          <span class="cert-count-emoji">🏆</span>
+          <span class="cert-count-num" id="certCountNum">0</span>
+          <span class="cert-count-label">Professional Certifications Completed</span>
+        </div>
+      </div>
+
+      <!-- Featured certification -->
+      <a href="#" class="glass cert-featured reveal" id="certFeatured" data-cert-index="0">
+        <span class="cert-featured-badge">⭐ Featured Certification</span>
+        <div class="cert-featured-media">
+          <img id="certFeaturedImg" src="https://ik.imagekit.io/ddbchepdw/JPMC%20INVESTMENT%20BANKING.png?updatedAt=1783234778578" alt="JPMorgan Chase Investment Banking certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+        </div>
+        <div class="cert-featured-body">
+          <span class="cert-featured-org" id="certFeaturedOrg">JPMorgan Chase &amp; Co.</span>
+          <div class="cert-featured-name" id="certFeaturedName">Investment Banking</div>
+          <div class="cert-featured-tags" id="certFeaturedTags">Financial Modeling • DCF • M&amp;A • Strategy</div>
+          <span class="cert-view-btn">View Credential ↗</span>
+        </div>
+      </a>
+
+      <!-- Grid -->
+      <div class="certs-grid">
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="0">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/JPMC%20INVESTMENT%20BANKING.png?updatedAt=1783234778578" alt="JPMorgan Investment Banking certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">JPMorgan Investment Banking</div>
+          <div class="cert-org">JPMorgan Chase &amp; Co.</div>
+          <div class="cert-desc">Job simulation covering financial modeling, M&amp;A analysis and client advisory workflows.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="1">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/JPMC%20SOFTWARE%20ENGINEERING.png?updatedAt=1783234779081" alt="JPMorgan Software Engineering certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">JPMorgan Software Engineering</div>
+          <div class="cert-org">JPMorgan Chase &amp; Co.</div>
+          <div class="cert-desc">Hands-on simulation of software development practices used across JPMorgan engineering teams.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="2">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/JPMC%20QUANTITATIVE%20RESEARCH.png?updatedAt=1783234779690" alt="JPMorgan Quantitative Research certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">JPMorgan Quantitative Research</div>
+          <div class="cert-org">JPMorgan Chase &amp; Co.</div>
+          <div class="cert-desc">Applied statistical modeling and quantitative analysis to real trading and risk scenarios.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="3">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/BCG%20X%20GEN%20AI.png?updatedAt=1783234779549" alt="BCG X Generative AI certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">BCG X Generative AI</div>
+          <div class="cert-org">BCG X</div>
+          <div class="cert-desc">Explored generative AI strategy and applied it to real-world consulting challenges.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="4">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/ELECTRONIC%20ARTS%20SOFTWARE%20ENGINEERING.png?updatedAt=1783234779286" alt="Electronic Arts Software Engineering certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Electronic Arts Software Engineering</div>
+          <div class="cert-org">Electronic Arts</div>
+          <div class="cert-desc">Simulated game engineering workflows including debugging and feature development.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="5">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/ELECTRONIC%20ARTS%20PRODUCT%20MANAGEMENT.png?updatedAt=1783234779402" alt="Electronic Arts Product Management certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Electronic Arts Product Management</div>
+          <div class="cert-org">Electronic Arts</div>
+          <div class="cert-desc">Practiced product strategy, feature prioritization and roadmap planning for a live game.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="6">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/LLOYDS%20BANKING%20GROUP%20UX%20DESIGN%20ADVANCED.png?updatedAt=1783234779353" alt="Lloyds Banking Group UX Design certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Lloyds Banking Group UX Design</div>
+          <div class="cert-org">Lloyds Banking Group</div>
+          <div class="cert-desc">Advanced UX design simulation focused on accessible, user-centered financial products.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="7">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/TATA%20GROUP%20ESG.png?updatedAt=1783234778716" alt="Tata Group ESG certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Tata ESG</div>
+          <div class="cert-org">Tata Group</div>
+          <div class="cert-desc">Examined environmental, social and governance strategy across a global conglomerate.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="8">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/TATA%20GROUP%20GEN%20AI%20POWERED%20DATA%20ANALYSIS.png?updatedAt=1783234779635" alt="Tata Group GenAI Powered Data Analytics certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Tata GenAI Powered Data Analytics</div>
+          <div class="cert-org">Tata Group</div>
+          <div class="cert-desc">Used generative AI tools to accelerate data analysis and business insight generation.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="9">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/TATA%20GROUP%20CYBERSECURITY%20ANALYST.png?updatedAt=1783234779344" alt="Tata Group Cybersecurity Analyst certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Tata Cybersecurity Analyst</div>
+          <div class="cert-org">Tata Group</div>
+          <div class="cert-desc">Investigated real-world security incidents and built foundational threat analysis skills.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+        <a href="#" class="glass cert-card reveal" data-cert-index="10">
+          <div class="cert-img-wrap">
+            <img src="https://ik.imagekit.io/ddbchepdw/CITI%20BANK%20SERVICES.png?updatedAt=1783234778862" alt="Citi Bank Services certificate" loading="lazy" decoding="async" referrerpolicy="no-referrer"/>
+          </div>
+          <div class="cert-name">Citi Bank Services</div>
+          <div class="cert-org">Citi</div>
+          <div class="cert-desc">Explored core banking services and customer-facing financial workflows at global scale.</div>
+          <span class="cert-view-btn">View Full Certificate</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="certLightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+    <button class="lightbox-arrow lightbox-prev" id="lightboxPrev" aria-label="Previous">‹</button>
+    <button class="lightbox-arrow lightbox-next" id="lightboxNext" aria-label="Next">›</button>
+    <div class="lightbox-figure">
+      <div class="lightbox-img-wrap">
+        <img id="lightboxImg" src="" alt="" loading="lazy" referrerpolicy="no-referrer"/>
+      </div>
+      <div class="lightbox-caption">
+        <div class="lightbox-caption-name" id="lightboxName"></div>
+        <div class="lightbox-caption-org" id="lightboxOrg"></div>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="s-wrap">
+      <div class="s-head reveal">
+        <span class="s-num">05</span>
+        <h2 class="s-title">CONTACT</h2>
+        <div class="s-line"></div>
+      </div>
+      <div class="contact-hero-text reveal">
+        LET'S BUILD<br/>
+        <span class="ghost">SOMETHING.</span>
+      </div>
+      <div class="contact-row">
+        <a class="glass contact-card reveal" href="mailto:ittzzzdhruv@gmail.com">
+          <div class="contact-card-icon">✉️</div>
+          <div>
+            <div class="contact-card-type">Email</div>
+            <div class="contact-card-val">ittzzzdhruv@gmail.com</div>
+          </div>
+          <span class="contact-card-arrow">↗</span>
+        </a>
+        <a class="glass contact-card reveal" href="tel:9594105790">
+          <div class="contact-card-icon">📱</div>
+          <div>
+            <div class="contact-card-type">Phone</div>
+            <div class="contact-card-val">+91 9594105790</div>
+          </div>
+          <span class="contact-card-arrow">↗</span>
+        </a>
+        <a class="glass contact-card reveal" href="https://www.linkedin.com/in/dhruv-chauhan6365" target="_blank" rel="noopener">
+          <div class="contact-card-icon">💼</div>
+          <div>
+            <div class="contact-card-type">LinkedIn</div>
+            <div class="contact-card-val">dhruv-chauhan6365</div>
+          </div>
+          <span class="contact-card-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-l">© 2025 Dhruv Dayaram Chauhan</span>
+    <span class="footer-r">MUMBAI · INDIA</span>
+  </footer>
+
+  <script>
+    // ── CURSOR
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let rx = 0, ry = 0, mx = 0, my = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+    (function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx+'px'; ring.style.top = ry+'px';
+      requestAnimationFrame(animRing);
+    })();
+    document.querySelectorAll('a,button,.skill-card,.exp-card,.contact-card,.stat,.cert-card,.cert-featured,.cert-view-btn,.lightbox-close,.lightbox-arrow').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.transform='translate(-50%,-50%) scale(2.5)'; cursor.style.opacity='0.4'; ring.style.width='56px'; ring.style.height='56px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.transform='translate(-50%,-50%) scale(1)'; cursor.style.opacity='1'; ring.style.width='32px'; ring.style.height='32px'; });
+    });
+
+    // ── REVEAL
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if(e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), i * 90); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => io.observe(el));
+
+    // ── NAV HIGHLIGHT
+    const secs = document.querySelectorAll('section[id]');
+    const navAs = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      secs.forEach(s => { if(window.scrollY >= s.offsetTop - 140) cur = s.id; });
+      navAs.forEach(a => { a.style.color = a.getAttribute('href') === '#'+cur ? '#fff' : ''; });
+    });
+
+    // ── CERTIFICATIONS: IMAGE FALLBACK
+    document.querySelectorAll('.cert-img-wrap img, .cert-featured-media img').forEach(img => {
+      img.addEventListener('error', () => {
+        img.closest('.cert-img-wrap, .cert-featured-media').style.display = 'flex';
+        img.closest('.cert-img-wrap, .cert-featured-media').style.alignItems = 'center';
+        img.closest('.cert-img-wrap, .cert-featured-media').style.justifyContent = 'center';
+        img.replaceWith(Object.assign(document.createElement('div'), {
+          textContent: 'Preview unavailable',
+          style: "font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:20px;text-align:center;"
+        }));
+      });
+    });
+
+    // ── CERTIFICATIONS: TIME-BASED FEATURED ROTATION (changes every ~3 hours)
+    (function() {
+      const featuredPool = [
+        { org: 'JPMorgan Chase &amp; Co.', name: 'Investment Banking', tags: 'Financial Modeling • DCF • M&amp;A • Strategy', src: 'https://ik.imagekit.io/ddbchepdw/JPMC%20INVESTMENT%20BANKING.png?updatedAt=1783234778578', gridIndex: 0 },
+        { org: 'JPMorgan Chase &amp; Co.', name: 'Software Engineering', tags: 'Engineering • Debugging • System Design', src: 'https://ik.imagekit.io/ddbchepdw/JPMC%20SOFTWARE%20ENGINEERING.png?updatedAt=1783234779081', gridIndex: 1 },
+        { org: 'JPMorgan Chase &amp; Co.', name: 'Quantitative Research', tags: 'Statistics • Risk • Trading Models', src: 'https://ik.imagekit.io/ddbchepdw/JPMC%20QUANTITATIVE%20RESEARCH.png?updatedAt=1783234779690', gridIndex: 2 },
+        { org: 'BCG X', name: 'Generative AI', tags: 'AI Strategy • Consulting • Innovation', src: 'https://ik.imagekit.io/ddbchepdw/BCG%20X%20GEN%20AI.png?updatedAt=1783234779549', gridIndex: 3 },
+        { org: 'Electronic Arts', name: 'Software Engineering', tags: 'Game Dev • Debugging • Features', src: 'https://ik.imagekit.io/ddbchepdw/ELECTRONIC%20ARTS%20SOFTWARE%20ENGINEERING.png?updatedAt=1783234779286', gridIndex: 4 },
+        { org: 'Electronic Arts', name: 'Product Management', tags: 'Strategy • Roadmapping • Prioritization', src: 'https://ik.imagekit.io/ddbchepdw/ELECTRONIC%20ARTS%20PRODUCT%20MANAGEMENT.png?updatedAt=1783234779402', gridIndex: 5 },
+        { org: 'Lloyds Banking Group', name: 'UX Design Advanced', tags: 'UX • Accessibility • Financial Products', src: 'https://ik.imagekit.io/ddbchepdw/LLOYDS%20BANKING%20GROUP%20UX%20DESIGN%20ADVANCED.png?updatedAt=1783234779353', gridIndex: 6 },
+        { org: 'Tata Group', name: 'ESG', tags: 'Sustainability • Governance • Strategy', src: 'https://ik.imagekit.io/ddbchepdw/TATA%20GROUP%20ESG.png?updatedAt=1783234778716', gridIndex: 7 },
+        { org: 'Tata Group', name: 'GenAI Powered Data Analytics', tags: 'Generative AI • Data • Insights', src: 'https://ik.imagekit.io/ddbchepdw/TATA%20GROUP%20GEN%20AI%20POWERED%20DATA%20ANALYSIS.png?updatedAt=1783234779635', gridIndex: 8 },
+        { org: 'Tata Group', name: 'Cybersecurity Analyst', tags: 'Security • Threat Analysis • Response', src: 'https://ik.imagekit.io/ddbchepdw/TATA%20GROUP%20CYBERSECURITY%20ANALYST.png?updatedAt=1783234779344', gridIndex: 9 },
+        { org: 'Citi', name: 'Bank Services', tags: 'Banking • Customer Ops • Finance', src: 'https://ik.imagekit.io/ddbchepdw/CITI%20BANK%20SERVICES.png?updatedAt=1783234778862', gridIndex: 10 }
+      ];
+
+      const bucketHours = 3;
+      const bucket = Math.floor(Date.now() / (bucketHours * 60 * 60 * 1000));
+      const pick = featuredPool[bucket % featuredPool.length];
+
+      const featEl = document.getElementById('certFeatured');
+      const imgEl = document.getElementById('certFeaturedImg');
+      const orgEl = document.getElementById('certFeaturedOrg');
+      const nameEl = document.getElementById('certFeaturedName');
+      const tagsEl = document.getElementById('certFeaturedTags');
+
+      if (featEl && pick) {
+        featEl.setAttribute('data-cert-index', pick.gridIndex);
+        imgEl.src = pick.src;
+        imgEl.alt = pick.org + ' ' + pick.name + ' certificate';
+        orgEl.innerHTML = pick.org;
+        nameEl.textContent = pick.name;
+        tagsEl.innerHTML = pick.tags;
+      }
+    })();
+
+    // ── CERTIFICATIONS: COUNT-UP
+    const certCountEl = document.getElementById('certCountNum');
+    const certCountWrap = document.querySelector('.cert-count-wrap');
+    if (certCountEl && certCountWrap) {
+      const target = 11;
+      let counted = false;
+      const countIO = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !counted) {
+            counted = true;
+            const duration = 1200;
+            const start = performance.now();
+            function tick(now) {
+              const progress = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              certCountEl.textContent = Math.round(eased * target);
+              if (progress < 1) requestAnimationFrame(tick);
+              else certCountEl.textContent = target;
+            }
+            requestAnimationFrame(tick);
+            countIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      countIO.observe(certCountWrap);
+    }
+
+    // ── CERTIFICATIONS: LIGHTBOX
+    (function() {
+      const certs = Array.from(document.querySelectorAll('.certs-grid .cert-card')).map(card => ({
+        src: card.querySelector('img').getAttribute('src'),
+        name: card.querySelector('.cert-name').textContent.trim(),
+        org: card.querySelector('.cert-org').textContent.trim()
+      }));
+
+      const lightbox = document.getElementById('certLightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxName = document.getElementById('lightboxName');
+      const lightboxOrg = document.getElementById('lightboxOrg');
+      const lightboxCounter = document.getElementById('lightboxCounter');
+      const btnClose = document.getElementById('lightboxClose');
+      const btnPrev = document.getElementById('lightboxPrev');
+      const btnNext = document.getElementById('lightboxNext');
+
+      let currentIndex = 0;
+
+      function openLightbox(index) {
+        currentIndex = index;
+        renderLightbox();
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+        lightboxImg.classList.remove('zoomed');
+      }
+
+      function renderLightbox() {
+        const cert = certs[currentIndex];
+        lightboxImg.classList.remove('zoomed');
+        lightboxImg.src = cert.src;
+        lightboxImg.alt = cert.name + ' certificate';
+        lightboxName.textContent = cert.name;
+        lightboxOrg.textContent = cert.org;
+        lightboxCounter.textContent = (currentIndex + 1) + ' / ' + certs.length;
+      }
+
+      function showNext() { currentIndex = (currentIndex + 1) % certs.length; renderLightbox(); }
+      function showPrev() { currentIndex = (currentIndex - 1 + certs.length) % certs.length; renderLightbox(); }
+
+      document.querySelectorAll('[data-cert-index]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          openLightbox(parseInt(el.getAttribute('data-cert-index'), 10));
+        });
+      });
+
+      btnClose.addEventListener('click', closeLightbox);
+      btnNext.addEventListener('click', showNext);
+      btnPrev.addEventListener('click', showPrev);
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      lightboxImg.addEventListener('dblclick', () => {
+        lightboxImg.classList.toggle('zoomed');
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') showNext();
+        if (e.key === 'ArrowLeft') showPrev();
+      });
+    })();
+  </script>
+</body>
+</html>
